@@ -4,189 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your App - Sign Up & Login</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .container {
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-            position: relative;
-        }
-
-        .logo {
-            font-size: 2.5em;
-            color: #667eea;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-
-        .tagline {
-            color: #666;
-            margin-bottom: 30px;
-            font-size: 1.1em;
-        }
-
-        .tabs {
-            display: flex;
-            margin-bottom: 30px;
-            background: #f8f9fa;
-            border-radius: 12px;
-            overflow: hidden;
-        }
-
-        .tab-btn {
-            flex: 1;
-            padding: 15px;
-            border: none;
-            background: none;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .tab-btn.active {
-            background: #667eea;
-            color: white;
-        }
-
-        .form-section {
-            display: none;
-        }
-
-        .form-section.active {
-            display: block;
-        }
-
-        .form-group {
-            position: relative;
-            margin-bottom: 25px;
-            text-align: left;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #333;
-            font-weight: 500;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 15px 20px;
-            border: 2px solid #e1e5e9;
-            border-radius: 12px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            background: #f8f9fa;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: #667eea;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .submit-btn {
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 18px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s ease;
-            margin-top: 10px;
-        }
-
-        .submit-btn:hover {
-            transform: translateY(-2px);
-        }
-
-        .error {
-            background: #fee;
-            color: #c33;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            border-left: 4px solid #c33;
-            display: none;
-        }
-
-        .success {
-            background: #efe;
-            color: #3c3;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            border-left: 4px solid #3c3;
-            display: none;
-        }
-
-        .dashboard {
-            display: none;
-            text-align: center;
-        }
-
-        .dashboard h2 {
-            color: #333;
-            margin-bottom: 20px;
-        }
-
-        .user-info {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 12px;
-            margin: 20px 0;
-        }
-
-        .logout-btn {
-            background: #6c757d;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-top: 20px;
-        }
-
-        .switch-tab {
-            color: #667eea;
-            text-decoration: none;
-            font-weight: 500;
-            margin-top: 20px;
-            display: inline-block;
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 30px 20px;
-                margin: 10px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
@@ -195,23 +13,27 @@
             <div class="logo">🚀 YourApp</div>
             <div class="tagline">Create New Account</div>
             
-            <div id="signupError" class="error"></div>
-            <div id="signupSuccess" class="success"></div>
+            <?php if(isset($_SESSION['error'])): ?>
+                <div class="error"><?php echo $_SESSION['error']; unset($_SESSION['error']); ?></div>
+            <?php endif; ?>
+            <?php if(isset($_SESSION['success'])): ?>
+                <div class="success"><?php echo $_SESSION['success']; unset($_SESSION['success']); ?></div>
+            <?php endif; ?>
 
-            <form id="signupForm">
+            <form id="signupForm" action="signup.php" method="POST">
                 <div class="form-group">
                     <label for="signupUsername">Username</label>
-                    <input type="text" id="signupUsername" required placeholder="Choose username">
+                    <input type="text" name="username" id="signupUsername" required placeholder="Choose username">
                 </div>
                 
                 <div class="form-group">
                     <label for="signupPassword">Password</label>
-                    <input type="password" id="signupPassword" required placeholder="Choose password" minlength="6">
+                    <input type="password" name="password" id="signupPassword" required placeholder="Choose password" minlength="6">
                 </div>
                 
                 <div class="form-group">
                     <label for="confirmPassword">Confirm Password</label>
-                    <input type="password" id="confirmPassword" required placeholder="Confirm password">
+                    <input type="password" name="confirm" id="confirmPassword" required placeholder="Confirm password">
                 </div>
                 
                 <button type="submit" class="submit-btn">Sign Up</button>
@@ -225,18 +47,19 @@
             <div class="logo">🚀 YourApp</div>
             <div class="tagline">Welcome Back!</div>
             
-            <div id="loginError" class="error"></div>
-            <div id="loginSuccess" class="success"></div>
+            <?php if(isset($_SESSION['error'])): ?>
+                <div class="error"><?php echo $_SESSION['error']; unset($_SESSION['error']); ?></div>
+            <?php endif; ?>
 
-            <form id="loginForm">
+            <form id="loginForm" action="login.php" method="POST">
                 <div class="form-group">
                     <label for="loginUsername">Username</label>
-                    <input type="text" id="loginUsername" required placeholder="Enter username">
+                    <input type="text" name="username" id="loginUsername" required placeholder="Enter username">
                 </div>
                 
                 <div class="form-group">
                     <label for="loginPassword">Password</label>
-                    <input type="password" id="loginPassword" required placeholder="Enter password">
+                    <input type="password" name="password" id="loginPassword" required placeholder="Enter password">
                 </div>
                 
                 <button type="submit" class="submit-btn">Login</button>
@@ -244,148 +67,17 @@
             
             <a href="#" class="switch-tab" onclick="switchToSignup()">New user? Sign Up</a>
         </div>
-
-        <!-- Dashboard -->
-        <div id="dashboard" class="dashboard">
-            <h2>Welcome, <span id="userName"></span>! 🎉</h2>
-            <div class="user-info">
-                <p><strong>Username:</strong> <span id="displayUsername"></span></p>
-                <p><strong>Member Since:</strong> <span id="joinDate"></span></p>
-            </div>
-            <p>You are successfully logged in!</p>
-            <button class="logout-btn" onclick="logout()">Logout</button>
-        </div>
     </div>
 
     <script>
-        // Initialize app
-        let currentUser = null;
-
-        // Load users from localStorage
-        function loadUsers() {
-            const users = localStorage.getItem('users');
-            return users ? JSON.parse(users) : {};
-        }
-
-        // Save users to localStorage
-        function saveUsers(users) {
-            localStorage.setItem('users', JSON.stringify(users));
-        }
-
-        // Show message function
-        function showMessage(elementId, message, isError = false) {
-            const element = document.getElementById(elementId);
-            element.textContent = message;
-            element.style.display = 'block';
-            setTimeout(() => element.style.display = 'none', 4000);
-        }
-
-        // Switch to Login
         function switchToLogin() {
             document.getElementById('signupSection').classList.remove('active');
             document.getElementById('loginSection').classList.add('active');
-            document.querySelector('.tab-btn[onclick="switchToSignup()"]').classList.remove('active');
-            document.querySelector('.tab-btn[onclick="switchToLogin()"]').classList.add('active');
         }
-
-        // Switch to Sign Up
         function switchToSignup() {
             document.getElementById('loginSection').classList.remove('active');
             document.getElementById('signupSection').classList.add('active');
-            document.querySelector('.tab-btn[onclick="switchToLogin()"]').classList.remove('active');
-            document.querySelector('.tab-btn[onclick="switchToSignup()"]').classList.add('active');
         }
-
-        // Sign Up Form
-        document.getElementById('signupForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const username = document.getElementById('signupUsername').value.trim();
-            const password = document.getElementById('signupPassword').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-
-            // Validation
-            if (!username || !password || !confirmPassword) {
-                showMessage('signupError', '❌ Please fill all fields!', true);
-                return;
-            }
-
-            if (password.length < 6) {
-                showMessage('signupError', '❌ Password must be at least 6 characters!', true);
-                return;
-            }
-
-            if (password !== confirmPassword) {
-                showMessage('signupError', '❌ Passwords do not match!', true);
-                return;
-            }
-
-            const users = loadUsers();
-            if (users[username]) {
-                showMessage('signupError', '❌ Username already exists!', true);
-                return;
-            }
-
-            // Create new user
-            users[username] = {
-                password: password,
-                joined: new Date().toLocaleDateString()
-            };
-            saveUsers(users);
-
-            showMessage('signupSuccess', '✅ Account created successfully!');
-            // Auto-login after signup
-            document.getElementById('loginUsername').value = username;
-            document.getElementById('loginPassword').value = password;
-            setTimeout(() => document.getElementById('loginForm').dispatchEvent(new Event('submit')), 1000);
-        });
-
-        // Login Form
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const username = document.getElementById('loginUsername').value.trim();
-            const password = document.getElementById('loginPassword').value;
-
-            if (!username || !password) {
-                showMessage('loginError', '❌ Please enter username and password!', true);
-                return;
-            }
-
-            const users = loadUsers();
-            if (!users[username] || users[username].password !== password) {
-                showMessage('loginError', '❌ Invalid username or password!', true);
-                return;
-            }
-
-            // Login Success
-            currentUser = username;
-            document.getElementById('userName').textContent = username;
-            document.getElementById('displayUsername').textContent = username;
-            document.getElementById('joinDate').textContent = users[username].joined;
-            
-            document.getElementById('loginSection').classList.remove('active');
-            document.getElementById('dashboard').style.display = 'block';
-            showMessage('loginSuccess', '✅ Welcome back!');
-        });
-
-        // Logout
-        function logout() {
-            currentUser = null;
-            document.getElementById('loginForm').reset();
-            document.getElementById('signupForm').reset();
-            document.getElementById('dashboard').style.display = 'none';
-            document.getElementById('loginSection').classList.add('active');
-        }
-
-        // Initialize - Check if already logged in (optional)
-        window.onload = function() {
-            // Uncomment below to auto-login last user (optional)
-            // const lastUser = localStorage.getItem('lastUser');
-            // if (lastUser) {
-            //     document.getElementById('loginUsername').value = lastUser;
-            // }
-        };
     </script>
 </body>
 </html>
