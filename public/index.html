@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your App - Sign Up & Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div id="signupSection" class="form-section">
+            <div class="logo">🚀 YourApp</div>
+            <div class="tagline">Create New Account</div>
+            <div id="signupMsg"></div>
+            <form id="signupForm">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" name="username" required placeholder="Choose username">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" required minlength="6" placeholder="Choose password">
+                </div>
+                <div class="form-group">
+                    <label>Confirm Password</label>
+                    <input type="password" name="confirm" required placeholder="Confirm password">
+                </div>
+                <button type="submit" class="submit-btn">Sign Up</button>
+            </form>
+            <a href="#" class="switch-tab" onclick="switchToLogin()">Already have account? Login</a>
+        </div>
+
+        <div id="loginSection" class="form-section active">
+            <div class="logo">🚀 YourApp</div>
+            <div class="tagline">Welcome Back!</div>
+            <div id="loginMsg"></div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" name="username" required placeholder="Enter username">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" required placeholder="Enter password">
+                </div>
+                <button type="submit" class="submit-btn">Login</button>
+            </form>
+            <a href="#" class="switch-tab" onclick="switchToSignup()">New user? Sign Up</a>
+        </div>
+    </div>
+
+    <script>
+        function showMsg(id, msg, isError = false) {
+            const el = document.getElementById(id);
+            el.textContent = msg;
+            el.className = isError ? 'error' : 'success';
+            setTimeout(() => el.textContent = '', 3000);
+        }
+
+        function switchToLogin() {
+            document.getElementById('signupSection').classList.remove('active');
+            document.getElementById('loginSection').classList.add('active');
+        }
+        function switchToSignup() {
+            document.getElementById('loginSection').classList.remove('active');
+            document.getElementById('signupSection').classList.add('active');
+        }
+
+        // Signup
+        document.getElementById('signupForm').onsubmit = async e => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData);
+            
+            const res = await fetch('/api/auth/signup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            const result = await res.json();
+            
+            showMsg('signupMsg', result.message, !result.success);
+            if (result.success) {
+                window.location.href = result.redirect;
+            }
+        };
+
+        // Login
+        document.getElementById('loginForm').onsubmit = async e => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData);
+            
+            const res = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            const result = await res.json();
+            
+            showMsg('loginMsg', result.message, !result.success);
+            if (result.success) {
+                window.location.href = result.redirect;
+            }
+        };
+    </script>
+</body>
+</html>
